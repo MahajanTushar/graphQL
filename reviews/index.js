@@ -29,9 +29,21 @@ const typeDefs = gql`
     upc: String! @external
     addreview(rid:ID!,rating:Int,comments:String,authorId:String): Review @requires(fields: "upc")
   }
+
+  extend type User @key(fields:"uid"){
+    uid: ID! @external
+    addReviewWithoutPassingAuthorID(rid:ID!,rating:Int,comments:String,productId:String): Review @requires(fields:"uid" )
+  }
 `;
 
 const resolvers = {
+  User:{
+    addReviewWithoutPassingAuthorID:({uid},args) => {
+      var obj={rid:args.rid,rating:args.rating,comments:args.comments, authorId:uid, productId:args.productId};
+      console.log("mututation object is :",obj);
+      return addReviewToDB(obj);
+    }
+  },
   Product:{
     addreview:({upc},args) => {
       var obj={rid:args.rid,rating:args.rating,comments:args.comments, authorId:args.authorId, productId:upc};

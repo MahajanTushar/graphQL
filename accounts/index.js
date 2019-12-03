@@ -13,6 +13,8 @@ const typeDefs = gql`
     addUser(uid: String, name: String, email: String, username: String): User!
     updateUserById(uid:String,newName:String,NewEmail:String):User!
     deleteUserbyUid(uid:String):[User]
+    getUserbyEmailForReviewAddition(email:String=""): User!
+    
   }
 
   extend type Review @key(fields:"rid"){
@@ -51,6 +53,9 @@ const resolvers = {
     }
   },
   Mutation: {
+    getUserbyEmailForReviewAddition(_,args){
+      return returnUserByEmail(args.email);
+    },
     addUser(_,args) {
       var myobj = {uid:args.uid, name:args.name, email: args.email, username: args.username};
      return  addUserValues(myobj);
